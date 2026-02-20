@@ -1,16 +1,39 @@
-# React + Vite
+# Лабораторная работа №8. Введение в React + JSX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Мини-проект: MovieSearcher (Поиск фильмов через API)
 
-Currently, two official plugins are available:
+## Пример использованного API-запроса
+Для получения данных используется стандартный `fetch`. Пример функции для обращения к API OMDb:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```javascript
+const searchMovies = async (title) => {
+  const response = await fetch(`http://www.omdbapi.com/?s=${title}&apikey=YOUR_KEY`);
+  const data = await response.json();
+  if (data.Search) {
+    setMovies(data.Search);
+  }
+};
+```
+Ответы на вопросы
+Что делает useEffect в вашем приложении?
+В моем приложении хук useEffect отвечает за побочные эффекты, а именно за выполнение сетевого запроса к API. Он настроен так, чтобы срабатывать один раз при монтировании компонента (для отображения списка фильмов по умолчанию), либо каждый раз, когда меняется значение в поле поиска (если реализован "живой поиск"). Это позволяет отделять логику получения данных от логики отображения.
 
-## React Compiler
+Какие состояния вы использовали и зачем?
+Я использовал хук useState для управления следующими состояниями:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+movies (массив): хранит текущий список фильмов, полученных от сервера. Это состояние напрямую влияет на то, какие карточки отображаются на экране.
 
-## Expanding the ESLint configuration
+searchTerm (строка): хранит текст, который пользователь вводит в инпут. Это состояние используется как параметр для API-запроса.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+loading (boolean): позволяет показывать спиннер или текст "Загрузка...", пока данные ожидаются от сервера.
+
+Где ИИ помог, а где пришлось разбираться самому?
+Помощь ИИ: ИИ помог быстро сгенерировать структуру JSX для карточек фильмов и предложил оптимальный способ обработки асинхронного запроса через async/await. Также ИИ подсказал, как правильно написать стили для адаптивной сетки (Grid), чтобы карточки красиво располагались на разных экранах.
+
+Самостоятельная работа: Мне пришлось самостоятельно разбираться с получением API-ключа и чтением документации, так как структура ответа у разных сервисов отличается. Также я вручную настраивал логику обработки ошибок (например, если API возвращает "Movie not found"), чтобы приложение не "падало".
+
+Что из документации API было важнее всего?
+Самым важным было изучение параметров запроса (какие буквы отвечают за поиск по названию, а какие за тип контента) и формата ответа. Например, понимание того, что данные о фильмах приходят в поле Search, а не в корне объекта, было критически важным для правильного обновления состояния movies. Также важным моментом было ограничение по количеству запросов и необходимость передачи ключа безопасности.
+
+Что вы поняли о компонентном подходе?
+Компонентный подход в React — это способ мыслить интерфейсом как набором независимых «деталей». Я понял, что гораздо удобнее создать один компонент MovieCard и переиспользовать его в цикле, чем дублировать код. Это делает код чистым, легко тестируемым и позволяет быстро вносить правки: изменив одну карточку, я меняю вид всего списка сразу.

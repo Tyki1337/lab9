@@ -2,6 +2,9 @@
 
 ## Мини-проект: MovieSearcher (Поиск фильмов через API)
 
+<img width="1616" height="841" alt="image" src="https://github.com/user-attachments/assets/e34b6c15-3185-4063-aa8a-2d15d357b2e3" />
+
+
 ## Пример использованного API-запроса
 Для получения данных используется стандартный `fetch`. Пример функции для обращения к API OMDb:
 
